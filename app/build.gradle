@@ -1,0 +1,139 @@
+apply plugin: 'com.android.application'
+
+
+
+//import org.aspectj.bridge.IMessage
+//import org.aspectj.bridge.MessageHandler
+//import org.aspectj.tools.ajc.Main
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+    defaultConfig {
+        applicationId Package_Name
+        minSdkVersion rootProject.ext.MinSdkVersion
+        targetSdkVersion rootProject.ext.TargetSdkVersion
+        versionCode rootProject.ext.VersionCode
+        versionName rootProject.ext.VersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+//    aspectjx {
+//        //排除所有package路径中包含`android.support`的class文件及库（jar文件）
+//        exclude 'android.support'
+//    }
+
+    repositories {
+        jcenter()
+        google()
+
+        flatDir {
+
+            dirs 'libs'
+
+        }
+
+    }
+
+}
+//引用自定义插件
+apply plugin: 'xc_lib_host_gradle'
+xcPluginConfig {
+    useAppCompat = true
+
+    // 标准Activity坑位数量
+    standardActivityPitCount = 7
+    singleTopActivityPitCount = 6
+    singleTaskActivityPitCount = 6
+    singleInstanceActivityPitCount = 2
+    servicePitCount = 8
+
+
+}
+buildscript {
+
+    repositories {
+        jcenter()
+        google()
+        mavenCentral()
+        maven {
+            //cooker-plugin 所在的仓库
+            //这里是发布在本地文件夹了
+            url uri('../release')
+        }
+    }
+    dependencies {
+
+        //引入cooker-plugin
+        classpath 'com.android.tools.build:gradle:3.6.2'
+        classpath 'xc.lib.host.gradle:xc_lib_host_gradle:1.1'
+
+    }
+}
+
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    implementation 'org.aspectj:aspectjrt:1.8.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation project(path: ':xc_lib_host')
+    implementation project(path: ':xc_lib_common')
+}
+
+
+
+//final def log = project.logger
+//final def variants = project.android.applicationVariants
+////在构建工程时，执行编织
+//variants.all { variant ->
+//    if (!variant.buildType.isDebuggable()) {
+//        log.debug("Skipping non-debuggable build type '${variant.buildType.name}'.")
+//        return;
+//    }
+//
+//    JavaCompile javaCompile = variant.javaCompile
+//    javaCompile.doLast {
+//        String[] args = ["-showWeaveInfo",
+//                         "-1.8",
+//                         "-inpath", javaCompile.destinationDir.toString(),
+//                         "-aspectpath", javaCompile.classpath.asPath,
+//                         "-d", javaCompile.destinationDir.toString(),
+//                         "-classpath", javaCompile.classpath.asPath,
+//                         "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
+//        log.debug "ajc args: " + Arrays.toString(args)
+//
+//        MessageHandler handler = new MessageHandler(true);
+//        new Main().run(args, handler);
+//        for (IMessage message : handler.getMessages(null, true)) {
+//            switch (message.getKind()) {
+//                case IMessage.ABORT:
+//                case IMessage.ERROR:
+//                case IMessage.FAIL:
+//                    log.error message.message, message.thrown
+//                    break;
+//                case IMessage.WARNING:
+//                    log.warn message.message, message.thrown
+//                    break;
+//                case IMessage.INFO:
+//                    log.info message.message, message.thrown
+//                    break;
+//                case IMessage.DEBUG:
+//                    log.debug message.message, message.thrown
+//                    break;
+//            }
+//        }
+//    }
+//}

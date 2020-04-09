@@ -1,0 +1,7 @@
+include ':app'
+rootProject.name='My Application'
+include ':xc_lib_common'
+include ':plugn1'
+include ':xc_lib_plugin'
+include ':xc_lib_host'
+include ':xc_lib_host_gradle'
