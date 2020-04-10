@@ -77,7 +77,22 @@ PluginManager为插件总入口
  
    matcher.addURI(getAuthority(), "com.plugin.test/delete", 1);
    
- 
+ 自Android 7.0后系统禁止应用向外部公开file://URI ，因此需要FileProvider来向外界传递URI
+     <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
+ 将上述类似配置信息放到宿主项目，并在res目录增加xml相关配置文件，插件使用的时候需使用在宿主配置的对应authorities即可正常访问。
+  if (Build.VERSION.SDK_INT >= 24) {
+            imageUri = FileProvider.getUriForFile(this, "com.fileprovider", outputImage);
+   } else {
+            imageUri = Uri.fromFile(outputImage);
+   }
  
  项目内代码都是同步执行，如需异步执行，自行配置即可，目前还在优化项目提高兼容性与性能。有问题欢迎联系我：bjxcfloat@163.com,谢谢！
  
