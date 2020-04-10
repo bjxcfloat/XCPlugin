@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,10 +25,13 @@ public abstract class PluginAppCompatActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
 
+
         proxy = new PluginComAcivityProxy(this);
         Context ctx = proxy.getBaseContext(newBase);
-
+ 
         super.attachBaseContext(ctx);
+
+//        Log.e("asdasdasd","newBase.getPackageName()-"+newBase.getPackageName()+"-class-"+  this.getPackageName());
         proxy.resetIntent(this);
     }
 

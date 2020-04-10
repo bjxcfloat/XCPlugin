@@ -112,6 +112,10 @@ public final class PluginManager {
     }
 
     public Intent getWrapperIntent(Intent intent) {
+        if(intent.getComponent()==null)
+        {
+            return intent;
+        }
         String clsName = intent.getComponent().getClassName();
         String pkgName = intent.getComponent().getPackageName();
 
