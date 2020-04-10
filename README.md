@@ -97,7 +97,7 @@ PluginManager为插件总入口
                 
         </provider>
         
- 将上述类似配置信息放到宿主项目，并在res目录增加xml相关配置文件，插件使用的时候需使用在宿主配置的对应authorities即可正常访问。
+ 将上述类似配置信息放到宿主项目（在插件项目配置无效），并在res目录增加xml相关配置文件，插件使用的时候需使用在宿主配置的对应authorities即可正常访问。
  
   if (Build.VERSION.SDK_INT >= 24) {
   
